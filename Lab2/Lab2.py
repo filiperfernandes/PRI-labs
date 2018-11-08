@@ -39,6 +39,7 @@ print(dict[1][token])
 print(dict[2][token])
 print(dict[3][token])
 print(dict[4][token])
+
         #print(f.read())
         #dict[line.rstrip('\n')] = f.
 #print(dict)
