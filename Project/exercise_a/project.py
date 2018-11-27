@@ -14,11 +14,11 @@ def index():
         csv_reader = csv.DictReader(csv_file)
         writer = ix.writer()
         for row in csv_reader:
-            writer.add_document(party=row['party'], content=row['text'])
+                writer.add_document(party=row['party'], content=row['text'])
         writer.commit()
     ix = open_dir("dir")
     with ix.searcher() as searcher:
-        query = QueryParser("content", ix.schema, group=OrGroup).parse('United')
+        query = QueryParser("content", ix.schema).parse('United')
         results = searcher.search(query, limit=10000000)
         for r in results:
             print(r)
