@@ -8,22 +8,30 @@ import sys
 
 def index():
     csv.field_size_limit(sys.maxsize)
-    schema = Schema(party=TEXT(stored=True), content=TEXT)
+    schema = Schema(id=NUMERIC(stored=True), manifest_id=TEXT(stored=True), party=TEXT(stored=True), content=TEXT)
     ix = create_in("dir", schema)
     with open("en_docs_clean.csv", 'r') as csv_file:
         csv_reader = csv.DictReader(csv_file)
         writer = ix.writer()
+        i = 0
         for row in csv_reader:
-                writer.add_document(party=row['party'], content=row['text'])
+            i = i + 1
+            writer.add_document(id=i, manifest_id=row['manifesto_id'], party=row['party'], content=row['text'])
         writer.commit()
     ix = open_dir("dir")
     with ix.searcher() as searcher:
-        query = QueryParser("content", ix.schema).parse('United')
-        results = searcher.search(query, limit=10000000)
+        qu = QueryParser("content", ix.schema)
+        q = qu.parse("United")
+        results = searcher.search(q, sortedby="manifest_id", limit=None)
         for r in results:
             print(r)
     print(results.scored_length(), 'manifestos')
+    return results
+
+
+def statistics():
+    results = index()
 
 
 if __name__ == "__main__":
-    index()
+    statistics()
