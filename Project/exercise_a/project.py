@@ -6,7 +6,8 @@ import csv
 import sys
 
 
-def index():
+def index(word):
+    print(word)
     csv.field_size_limit(sys.maxsize)
     schema = Schema(manifest_id=TEXT(stored=True), party=TEXT(stored=True), content=TEXT)
     ix = create_in("dir", schema)
@@ -19,21 +20,44 @@ def index():
     ix = open_dir("dir")
     with ix.searcher() as searcher:
         qu = QueryParser("content", ix.schema, group=OrGroup)
-        q = qu.parse("veteran")
+        q = qu.parse(word)
         results = searcher.search(q, sortedby="manifest_id", limit=None)
-        l_id = []
+        #l_id = []
+        m = ""
+        p = ""
+        nr_manifestos = 0
         for r in results:
-            print(r)
-            l_id.append(r["manifest_id"])
-        list_manifest = remove(l_id)
-        print("\n", len(list_manifest), "manifests")
-        #print(results.scored_length(),)
-        return results
+            manifesto = r["manifest_id"]
+            party = r["party"]
+            if party != p and manifesto != m:
+                if nr_manifestos != 0:
+                    print(p,":", nr_manifestos, "manifestos")
+                nr_manifestos = 0
+                p = party
+                m = manifesto
+                nr_manifestos = nr_manifestos + 1
 
+            if party == p and manifesto != m:
+                nr_manifestos = nr_manifestos + 1
+
+            else:
+                nr_manifestos = nr_manifestos
+        print(p, ":", nr_manifestos, "manifestos")
+
+
+
+
+
+
+        #list_manifest = remove(l_id)
+        #print("\n", len(list_manifest), "manifests")
+        #print(results.scored_length(), "manifests in total")
+        #return results
 
 
 def statistics():
-    results = index()
+    word = sys.argv[1]
+    results = index(word)
 
 
 def remove(duplicate):
