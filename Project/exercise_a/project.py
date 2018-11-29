@@ -7,8 +7,6 @@ import sys
 import re
 import nltk
 
-dict={}
-
 
 def manifests(word):
     csv.field_size_limit(sys.maxsize)
@@ -30,26 +28,18 @@ def manifests(word):
         m = ""
         p = ""
         nr_manifestos = 0
+        dic = {}
+        man = []
         for r in results:
             manifesto = r["manifest_id"]
             party = r["party"]
-            if party != p and manifesto != m:
-                if nr_manifestos != 0:
-                    print(p, ":", nr_manifestos, "manifestos")
-                nr_manifestos = 0
-                p = party
-                m = manifesto
-                nr_manifestos = nr_manifestos + 1
-
-            if party == p and manifesto != m:
-                nr_manifestos = nr_manifestos + 1
-
-            else:
-                nr_manifestos = nr_manifestos
-        print(p, ":", nr_manifestos, "manifestos")
-
-        for res in results:
-            print(res)
+            print(manifesto)
+            if party not in dic:
+                dic[party] = 0
+            if manifesto not in man:
+                man.append(manifesto)
+                dic[party] += 1
+        print(dic)
 
 
 def keyword(word):
@@ -74,17 +64,17 @@ def keyword(word):
             q = qu.parse(s_words[i])
             results = searcher.search(q, sortedby="manifest_id", limit=None)
             print(s_words[i])
-            listWords = []
-            x = 0
+            d = {}
             for r in results:
                 raw = r["content"]
                 par = r["party"]
+                if par not in d:
+                    d[par] = 0
                 raw2 = re.split("\W+", raw)
                 for word in raw2:
                     if word.lower() == s_words[i].lower():
-                        dict[i] = par
-
-            print(x)
+                        d[par] += 1
+            print(d)
             i = i + 1
 
 
@@ -93,7 +83,7 @@ def keyword(word):
 
 def statistics():
     word = sys.argv[1]
-    #manifests(word)
+    manifests(word)
     keyword(word)
 
 
