@@ -45,7 +45,6 @@ def manifests(word):
             print(dic)
             print("Score:", results.score(s))
             print("\n")
-
             i = i + 1
 
 
