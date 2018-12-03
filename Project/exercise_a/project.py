@@ -30,22 +30,22 @@ def manifests(word):
         qu = QueryParser("content", ix.schema, group=OrGroup)
         i = 0
         while i < len(s_words):
-            #dic = {}
             dic = dict.fromkeys(dic, 0)
             man = []
             q = qu.parse(s_words[i])
             results = searcher.search(q, limit=None)
-            print("\nkeyword: ", s_words[i])
+            print("Number of manifestos.")
+            print("Keyword:", s_words[i])
             for s, r in enumerate(results):
                 manifesto = r["manifest_id"]
                 party = r["party"]
-                #if party not in dic:
-                    #dic[party] = 0
                 if manifesto not in man:
                     man.append(manifesto)
                     dic[party] += 1
-            print(results.score(s))
             print(dic)
+            print("Score:", results.score(s))
+            print("\n")
+
             i = i + 1
 
 
@@ -59,27 +59,26 @@ def keyword(word):
                 d[p] = 0
     ix = open_dir("dir")
     s_words = word.split(",")
-    with ix.searcher(weighting=scoring.BM25F()) as searcher:
+    with ix.searcher(weighting=scoring.TF_IDF()) as searcher:
         qu = QueryParser("content", ix.schema, group=OrGroup)
         i = 0
         while i < len(s_words):
             d = dict.fromkeys(d, 0)
             q = qu.parse(s_words[i])
             results = searcher.search(q, limit=None)
-            print("\nkeyword: ", s_words[i])
+            print("Number of Keywords.")
+            print("Keyword:", s_words[i])
             for s, r in enumerate(results):
                 raw = r["content"]
                 par = r["party"]
-                #if par not in d:
-                    #d[par] = 0
                 raw2 = re.split("\W+", raw)
                 for word in raw2:
                     if word.lower() == s_words[i].lower():
                         d[par] += 1
-
-            print(results.score(s))
+            print("Score:", results.score(s))
             print(d)
             i = i + 1
+            print("\n")
 
 
 def statistics():
