@@ -42,8 +42,8 @@ def manifests(word):
                 if manifesto not in man:
                     man.append(manifesto)
                     dic[party] += 1
-            print(dic)
             print("Score:", results.score(s))
+            print(dic)
             print("\n")
             i = i + 1
 
