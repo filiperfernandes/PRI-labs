@@ -42,7 +42,6 @@ def manifests(word):
                 if manifesto not in man:
                     man.append(manifesto)
                     dic[party] += 1
-                print("Score:", results.score(s))
             print(dic)
             print("\n")
             i = i + 1
@@ -74,7 +73,6 @@ def keyword(word):
                 for word in raw2:
                     if word.lower() == s_words[i].lower():
                         d[par] += 1
-                print("Score:", results.score(s))
             print(d)
             i = i + 1
             print("\n")
@@ -88,3 +86,4 @@ def statistics():
 
 if __name__ == "__main__":
     statistics()
+
