@@ -62,7 +62,6 @@ def get_most_named_entity_per_party(language):
         nlp = spacy.load('en_core_web_sm')
         print("No language specified, using English package!")
 
-
     with open(FILE_PATH, 'r') as f:
         # blocksize = 947778
         # text = f.read(blocksize)
