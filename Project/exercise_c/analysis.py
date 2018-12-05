@@ -21,10 +21,30 @@ def get_parser():
     parser = argparse.ArgumentParser(description="""PRI statistical analysis tool""")
     parser.add_argument('-f', '--file', dest='file', help="""receive file from stdin [default: no]""",
                         action="store")
+    parser.add_argument('-g', '--globally', help="""Globally""",
+                        action="store_true")
+    parser.add_argument('-p', '--party', help="""Party""",
+                        action="store_true")
     return parser
 
 
-def magic():
+def get_party_list(list_of_parties):
+    for party in list_of_parties:
+        if party not in available_party_list:
+            available_party_list.append(party)
+
+
+def get_entity_list(list_of_entities):
+    entity_list = []
+    for entity in list_of_entities.ents:
+        entity_list.append(entity.label_)
+
+    c = Counter(entity_list)
+    return c.most_common(3)
+
+
+def get_most_named_entity_per_party():
+
     with open("../pri_project_data/en_docs_clean.csv", 'r') as f:
         # blocksize = 947778
         # text = f.read(blocksize)
@@ -54,70 +74,40 @@ def magic():
                     doc_dict.update({party: text})
 
         # Get Most Named Entity Per Party
-        get_most_named_entity_per_party()
 
+        # TODO: save it in a structure!! or not
+        for party in available_party_list:
+            ola = doc_dict.get(party)
+            firstpart, secondpart = ola[:len(ola) // 2], ola[len(ola) // 2:]
+            doc1 = nlp(firstpart)
+            doc2 = nlp(secondpart)
+            res1 = get_entity_list(doc1)
+            res2 = get_entity_list(doc2)
+            final_res = res1 + res2
+            testDict = defaultdict(int)
 
-def get_party_list(list_of_parties):
-    for party in list_of_parties:
-        if party not in available_party_list:
-            available_party_list.append(party)
+            for key, val in final_res:
+                testDict[key] += val
 
+            # RES yelds most named entities for each party
+            res = testDict.items()
+            print(party + ":")
+            print("Top entities mentioned:")
+            print(res)
 
-def get_entity_list(list_of_entities):
-    entity_list = []
-    for entity in list_of_entities.ents:
-        entity_list.append(entity.label_)
-
-    c = Counter(entity_list)
-    return c.most_common(2)
-
-
-def get_most_named_entity_per_party():
-    # TODO: save it in a structure!!
-    for party in available_party_list:
-        ola = doc_dict.get(party)
-        firstpart, secondpart = ola[:len(ola) // 2], ola[len(ola) // 2:]
-        doc1 = nlp(firstpart)
-        doc2 = nlp(secondpart)
-        res1 = get_entity_list(doc1)
-        res2 = get_entity_list(doc2)
-        testDict = defaultdict(int)
-        final_res = res1 + res2
-
-        for key, val in final_res:
-            testDict[key] += val
-
-        # RES yelds most named entities for each party
-        res = testDict.items()
-
-        bigger = 0
-        bigger_key = ""
-        for key, val in res:
-            if testDict[key] > bigger:
-                bigger = testDict[key]
-                bigger_key = key
-        print(party + ":")
-        print("Most named entity is: " + bigger_key + " occurs " + str(testDict[bigger_key]) + " times")
-
-
-
-        # if res1[0][0] == res2[0][0]:
-        #     final_res = [(res1[0][0], int(res1[0][1]) + int(res2[0][1]))]
-        # elif res1[1][0] == res2[1][0]:
-        #     final_res = [(res1[1][0], int(res1[1][1]) + int(res2[1][1]))]
-        # elif res1[0][0] == res2[1][0]:
-        #     final_res = [(res1[0][0], int(res1[0][1]) + int(res2[1][1]))]
-        # elif res1[1][0] == res2[0][0]:
-        #     final_res = [(res1[1][0], int(res1[1][1]) + int(res2[0][1]))]
-        # else:
-        #     print("TODO")
-        # print(res1)
-        # print(res2)
-        # print(final_res)
+            # bigger = 0
+            # bigger_key = ""
+            # for key, val in res:
+            #     if testDict[key] > bigger:
+            #         bigger = testDict[key]
+            #         bigger_key = key
+            # print(party + ":")
+            # print("Most named entity is: " + bigger_key + " occurs " + str(testDict[bigger_key]) + " times")
 
 
 def get_most_named_entity_globally():
     text_str = ""
+    final_res = []
     with open("../pri_project_data/en_docs_clean.csv", 'r') as f:
         csv_reader = csv.DictReader(f)
         for row in csv_reader:
@@ -128,9 +118,18 @@ def get_most_named_entity_globally():
                 text_str += text
             else:
                 doc = nlp(text_str)
-                res = get_entity_list(doc)
-                print(res)
+                final_res += get_entity_list(doc)
                 text_str = ""
+
+        testDict = defaultdict(int)
+
+        for key, val in final_res:
+            testDict[key] += val
+
+        # RES yelds most named entities for each party
+        res = testDict.items()
+        print("Top entities mentioned:")
+        print(res)
 
 
 def count_entities(list_of_entities, entity_list):
@@ -149,16 +148,21 @@ def main():
     parser = get_parser()
     args = vars(parser.parse_args())
     file = args['file']
+    globally = args['globally']
+    party = args['party']
 
     if file:
         print("Using file " + file)
+    if globally:
+        get_most_named_entity_globally()
+    if party:
+        get_most_named_entity_per_party()
     else:
-        magic()
+        print("Specify flag")
 
 
 if __name__ == "__main__":
     main()
-    # get_most_named_entity_globally()
 
 # doc = nlp(text)
 
