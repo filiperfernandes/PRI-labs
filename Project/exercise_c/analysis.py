@@ -8,8 +8,8 @@ import csv
 
 # Load English tokenizer, tagger, parser, NER and word vectors
 MAX = 1000000
-FILE_PATH = "../pri_project_data/pt_docs_clean.csv"
-nlp = spacy.load('en_core_web_sm')
+FILE_PATH = "../pri_project_data/en_docs_clean.csv"
+#nlp = spacy.load('en_core_web_sm')
 csv.field_size_limit(sys.maxsize)
 party_list = []
 text_list = []
@@ -17,6 +17,7 @@ text_per_party_list = []
 available_party_list = []
 doc_dict = {}
 party_dict = {}
+
 
 
 def get_parser():
@@ -51,7 +52,15 @@ def get_entity_list(list_of_entities):
     return c.most_common(3)
 
 
-def get_most_named_entity_per_party():
+def get_most_named_entity_per_party(language):
+
+    if language == "en":
+        nlp = spacy.load('en_core_web_sm')
+    elif language == "pt":
+        nlp = spacy.load('pt')
+    else:
+        nlp = spacy.load('en_core_web_sm')
+        print("No language specified, using English package!")
 
     with open(FILE_PATH, 'r') as f:
         # blocksize = 947778
@@ -86,12 +95,14 @@ def get_most_named_entity_per_party():
         # TODO: save it in a structure!! or not
         for party in available_party_list:
             ola = doc_dict.get(party)
+
             firstpart, secondpart = ola[:len(ola) // 2], ola[len(ola) // 2:]
             doc1 = nlp(firstpart)
             doc2 = nlp(secondpart)
             res1 = get_entity_list(doc1)
             res2 = get_entity_list(doc2)
             final_res = res1 + res2
+
             test_dict = defaultdict(int)
 
             for key, val in final_res:
@@ -113,7 +124,16 @@ def get_most_named_entity_per_party():
             # print("Most named entity is: " + bigger_key + " occurs " + str(testDict[bigger_key]) + " times")
 
 
-def get_most_named_entity_globally():
+def get_most_named_entity_globally(language):
+
+    if language == "en":
+        nlp = spacy.load('en_core_web_sm')
+    elif language == "pt":
+        nlp = spacy.load('pt')
+    else:
+        nlp = spacy.load('en_core_web_sm')
+        print("No language specified, using English package!")
+
     text_str = ""
     final_res = []
     with open(FILE_PATH, 'r') as f:
@@ -152,7 +172,15 @@ def count_entities(list_of_entities, entity_list):
     return entity_count
 
 
-def most_mentioned_party_per_party():
+def most_mentioned_party_per_party(language):
+
+    if language == "en":
+        nlp = spacy.load('en_core_web_sm')
+    elif language == "pt":
+        nlp = spacy.load('pt')
+    else:
+        nlp = spacy.load('en_core_web_sm')
+        print("No language specified, using English package!")
 
     with open(FILE_PATH, 'r') as f:
         csv_reader = csv.DictReader(f)
@@ -193,7 +221,16 @@ def most_mentioned_party_per_party():
                     print(ola.count(counting))
 
 
-def most_mentioned_by_all():
+def most_mentioned_by_all(language):
+
+    if language == "en":
+        nlp = spacy.load('en_core_web_sm')
+    elif language == "pt":
+        nlp = spacy.load('pt')
+    else:
+        nlp = spacy.load('en_core_web_sm')
+        print("No language specified, using English package!")
+
     with open(FILE_PATH, 'r') as f:
         csv_reader = csv.DictReader(f)
         for row in csv_reader:
@@ -251,22 +288,16 @@ def main():
     times = args['times']
     language = args['language']
 
-    if language == "en":
-        nlp = spacy.load('en_core_web_sm')
-    elif language == "pt":
-        nlp = spacy.load('pt')
-    else:
-        print("No language specified, using English package!")
     if file:
         print("Using file " + file)
     elif globally:
-        get_most_named_entity_globally()
+        get_most_named_entity_globally(language)
     elif party:
-        get_most_named_entity_per_party()
+        get_most_named_entity_per_party(language)
     elif mention:
-        most_mentioned_party_per_party()
+        most_mentioned_party_per_party(language)
     elif times:
-        most_mentioned_by_all()
+        most_mentioned_by_all(language)
     else:
         parser.print_help()
 
