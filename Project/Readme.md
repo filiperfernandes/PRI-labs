@@ -11,6 +11,9 @@
 
 ### Exercise A
 
+````search.py:````
+
+
 ##### Libraries used:
 
  - library1
@@ -24,6 +27,8 @@
  ---
  
 ### Exercise B
+````classification.py:````
+
 
 ##### Libraries used:
 
@@ -38,8 +43,7 @@
  ---
  
 ### Exercise C
-
- ---
+````analysis.py:````
  
 ##### Libraries used:
 
