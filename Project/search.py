@@ -21,6 +21,7 @@ def index():
         i = 2
         dic = {}
         d = {}
+        di = {}
         for row in csv_reader:
             writer.add_document(linha=i, manifest_id=row['manifesto_id'], party=row['party'], content=row['text'])
             i = i + 1
@@ -29,16 +30,19 @@ def index():
                 dic[p] = 0
             if p not in d:
                 d[p] = 0
+            if p not in di:
+                di[p] = 0
         writer.commit()
-    return dic, d
+    return dic, d, di
 
 
-def manifests_keywords(word, dic, d):
+def manifests_keywords(word, dic, d, di):
     s_words = word.split(",")
     ix = open_dir("dir")
     with ix.searcher(weighting=scoring.TF_IDF()) as searcher:
         qu = QueryParser("content", ix.schema, group=OrGroup)
         i = 0
+        lis = []
         while i < len(s_words):
             dic = dict.fromkeys(dic, 0)
             d = dict.fromkeys(d, 0)
@@ -48,14 +52,18 @@ def manifests_keywords(word, dic, d):
             for s, r in enumerate(results):
                 manifesto = r["manifest_id"]
                 party = r["party"]
+                if manifesto not in lis:
+                    lis.append(manifesto)
                 if manifesto not in man:
                     man.append(manifesto)
                     dic[party] += 1
+                    di[party] += 1
                 content = r["content"]
                 split_words = re.split("\W+", content)
                 for word in split_words:
                     if word.lower() == s_words[i].lower():
                         d[party] += 1
+            print("List of manifestos of keyword:", s_words[i])
             print(man, "\n")
             print("Number of manifestos.")
             print("Keyword:", s_words[i], '\n')
@@ -66,12 +74,16 @@ def manifests_keywords(word, dic, d):
             print(d)
             print("\n")
             i = i + 1
+        print("Manifestos of all keywords")
+        print(lis, "\n")
+        print("Total number of manifestos of all keywords")
+        print(di)
 
 
 def main():
     word = sys.argv[1]
-    dic, d = index()
-    manifests_keywords(word, dic, d)
+    dic, d, di = index()
+    manifests_keywords(word, dic, d, di)
 
 
 if __name__ == "__main__":
