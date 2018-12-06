@@ -290,6 +290,7 @@ def main():
 
     if file:
         print("Using file " + file)
+        FILE_PATH = "pri_project_data/"+file
     elif globally:
         get_most_named_entity_globally(language)
     elif party:

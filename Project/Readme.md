@@ -5,7 +5,7 @@
  - Install python3
  - Intall python3-pip
  - Install requirements in requirements.txt
-    - (pip3 install -r requirements.txt)
+    - ```pip3 install -r requirements.txt)```
  
  ---
 
@@ -16,13 +16,11 @@
 
 ##### Libraries used:
 
- - library1
- - library2
- - library3
+ - whoosh
  
  ##### Usage:
  
-  - run coiso
+  - ````python3 search.py keyword1, keyword2, keyword3, etc.````
  
  ---
  
@@ -32,13 +30,12 @@
 
 ##### Libraries used:
 
- - library4
- - library5
- - library6
+ - pandas
+ - sklearn
  
  ##### Usage:
  
-  - run coiso
+  - ````python3 classification.py````
   
  ---
  
@@ -51,7 +48,6 @@
  - collections.Counter
  - collections.defaultdict
  
- ---
  
  ##### Usage:
  
@@ -63,4 +59,3 @@
   ```[-t How many times does any given party mention other parties?] ```
   ```[-m  Which party is mentioned more times by the other parties?```
 
----
