@@ -52,6 +52,7 @@ def get_entity_list(list_of_entities):
     return c.most_common(3)
 
 
+# What are the most mentioned entities for each party?
 def get_most_named_entity_per_party(language):
 
     if language == "en":
@@ -124,6 +125,7 @@ def get_most_named_entity_per_party(language):
             # print("Most named entity is: " + bigger_key + " occurs " + str(testDict[bigger_key]) + " times")
 
 
+# What are the most mentioned entities globally?
 def get_most_named_entity_globally(language):
 
     if language == "en":
@@ -172,15 +174,8 @@ def count_entities(list_of_entities, entity_list):
     return entity_count
 
 
-def most_mentioned_party_per_party(language):
-
-    if language == "en":
-        nlp = spacy.load('en_core_web_sm')
-    elif language == "pt":
-        nlp = spacy.load('pt')
-    else:
-        nlp = spacy.load('en_core_web_sm')
-        print("No language specified, using English package!")
+#  How many times does any given party mention other parties?
+def most_mentioned_party_per_party():
 
     with open(FILE_PATH, 'r') as f:
         csv_reader = csv.DictReader(f)
@@ -208,9 +203,7 @@ def most_mentioned_party_per_party(language):
                     text += text_list[int(iid)]
                     doc_dict.update({party: text})
 
-        # Get Most Named Entity Per Party
-
-        # TODO: save it in a structure!! or not
+        # Get who mentions who
         for party in available_party_list:
             ola = doc_dict.get(party)
             for counting in available_party_list:
@@ -221,15 +214,8 @@ def most_mentioned_party_per_party(language):
                     print(ola.count(counting))
 
 
-def most_mentioned_by_all(language):
-
-    if language == "en":
-        nlp = spacy.load('en_core_web_sm')
-    elif language == "pt":
-        nlp = spacy.load('pt')
-    else:
-        nlp = spacy.load('en_core_web_sm')
-        print("No language specified, using English package!")
+# Which party is mentioned more times by the other parties?
+def most_mentioned_by_all():
 
     with open(FILE_PATH, 'r') as f:
         csv_reader = csv.DictReader(f)
@@ -257,9 +243,6 @@ def most_mentioned_by_all(language):
                     text += text_list[int(iid)]
                     doc_dict.update({party: text})
 
-        # Get Most Named Entity Per Party
-
-        # TODO: save it in a structure!! or not
         party_mentioned = {}
         for party in available_party_list:
             ola = doc_dict.get(party)
@@ -296,9 +279,9 @@ def main():
     elif party:
         get_most_named_entity_per_party(language)
     elif mention:
-        most_mentioned_party_per_party(language)
+        most_mentioned_by_all()
     elif times:
-        most_mentioned_by_all(language)
+        most_mentioned_party_per_party()
     else:
         parser.print_help()
 
