@@ -57,5 +57,5 @@
     - ```python3 analysis.py [-h help] [-f file] [-l language] [-p What are the most mentioned entities for each party?]```
   ``` [-g  What are the most mentioned entities globally?]``` 
   ```[-t How many times does any given party mention other parties?] ```
-  ```[-m  Which party is mentioned more times by the other parties?```
+  ```[-m  Which party is mentioned more times by the other parties?]```
 
