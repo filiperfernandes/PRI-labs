@@ -11,7 +11,7 @@ import argparse
 
 def get_parser():
 
-    parser = argparse.ArgumentParser(description="""PRI statistical analysis tool""")
+    parser = argparse.ArgumentParser(description="""PRI classification tool""")
     parser.add_argument('-f', '--file', dest='file', help="""receive file from stdin [default: no]""",
                         action="store")
     parser.add_argument('-s', '--size', dest='size', help="""Specify training and test percentage [default: 0.5]""",
