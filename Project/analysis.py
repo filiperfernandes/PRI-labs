@@ -8,7 +8,6 @@ import csv
 
 # Load English tokenizer, tagger, parser, NER and word vectors
 MAX = 1000000
-FILE_PATH = "pri_project_data/en_docs_clean.csv"
 #nlp = spacy.load('en_core_web_sm')
 csv.field_size_limit(sys.maxsize)
 party_list = []
@@ -24,7 +23,7 @@ def get_parser():
     parser.add_argument('-f', '--file', dest='file', help="""receive file from stdin [default: no]""",
                         action="store")
     parser.add_argument('-l', '--language', dest='language', help="""Specify language 'en' or 'pt'""",
-                        action="store")
+                        action="store", required=True)
     parser.add_argument('-p', '--party', help="""What are the most mentioned entities for each party?""",
                         action="store_true")
     parser.add_argument('-g', '--globally', help="""What are the most mentioned entities globally?""",
@@ -52,7 +51,7 @@ def get_entity_list(list_of_entities):
 
 
 # What are the most mentioned entities for each party?
-def get_most_named_entity_per_party(language):
+def get_most_named_entity_per_party(language, FILE_PATH):
 
     if language == "en":
         nlp = spacy.load('en_core_web_sm')
@@ -125,7 +124,7 @@ def get_most_named_entity_per_party(language):
 
 
 # What are the most mentioned entities globally?
-def get_most_named_entity_globally(language):
+def get_most_named_entity_globally(language, FILE_PATH):
 
     if language == "en":
         nlp = spacy.load('en_core_web_sm')
@@ -174,7 +173,7 @@ def count_entities(list_of_entities, entity_list):
 
 
 #  How many times does any given party mention other parties?
-def most_mentioned_party_per_party():
+def most_mentioned_party_per_party(FILE_PATH):
 
     with open(FILE_PATH, 'r') as f:
         csv_reader = csv.DictReader(f)
@@ -214,7 +213,7 @@ def most_mentioned_party_per_party():
 
 
 # Which party is mentioned more times by the other parties?
-def most_mentioned_by_all():
+def most_mentioned_by_all(FILE_PATH):
 
     with open(FILE_PATH, 'r') as f:
         csv_reader = csv.DictReader(f)
@@ -280,15 +279,16 @@ def main():
         FILE_PATH = "pri_project_data/en_docs_clean.csv"
     else:
         print("Language must be 'en' or 'pt'")
+        return
 
     if globally:
-        get_most_named_entity_globally(language)
+        get_most_named_entity_globally(language, FILE_PATH)
     elif party:
-        get_most_named_entity_per_party(language)
+        get_most_named_entity_per_party(language, FILE_PATH)
     elif mention:
-        most_mentioned_by_all()
+        most_mentioned_by_all(FILE_PATH)
     elif times:
-        most_mentioned_party_per_party()
+        most_mentioned_party_per_party(FILE_PATH)
     else:
         parser.print_help()
 
