@@ -20,10 +20,12 @@ def get_parser():
                         action="store_true")
     parser.add_argument('-P', '--PER', help="""Perceptron""",
                         action="store_true")
-    parser.add_argument('-m', '--multi', help="""MultinomialNB""",
+    parser.add_argument('-M', '--multi', help="""MultinomialNB""",
                         action="store_true")
-    parser.add_argument('-l', '--linear', help="""LinearSVC""",
+    parser.add_argument('-lin', '--linear', help="""LinearSVC""",
                         action="store_true")
+    parser.add_argument('-l', '--language', dest='language', help="""Specify language 'en' or 'pt'""",
+                        action="store", required=True)
     return parser
 
 
@@ -37,12 +39,20 @@ def main():
     multi = args['multi']
     linear = args['linear']
     size = args['size']
+    language = args['language']
 
     if file:
         print("Using file " + file)
         FILE_PATH = "pri_project_data/"+file
     else:
         FILE_PATH = "pri_project_data/en_docs_clean.csv"
+
+    if language is not None and language == "pt" and not file:
+        FILE_PATH = "pri_project_data/pt_docs_clean.csv"
+    elif language is not None and language == "en" and not file:
+        FILE_PATH = "pri_project_data/en_docs_clean.csv"
+    else:
+        print("Language must be 'en' or 'pt'")
 
     df = pd.read_csv(FILE_PATH)
     y = df.party

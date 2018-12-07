@@ -8,15 +8,13 @@ import sys
 import re
 import argparse
 
-FILE_PATH = "pri_project_data/en_docs_clean.csv"
-
 
 def get_parser():
     parser = argparse.ArgumentParser(description="""PRI search tool""")
     parser.add_argument('-f', '--file', dest='file', help="""receive file from stdin [default: no]""",
                         action="store")
     parser.add_argument('-l', '--language', dest='language', help="""Specify language 'en' or 'pt'""",
-                        action="store")
+                        action="store", required=True)
     parser.add_argument('-t', '--TF', help="""TF_IDF""",
                         action="store_true")
     parser.add_argument('-b', '--BM', help="""BM-25F""",
@@ -29,7 +27,7 @@ def get_parser():
     return parser
 
 
-def index():
+def index(FILE_PATH):
     csv.field_size_limit(sys.maxsize)
     schema = Schema(linha=NUMERIC(stored=True), manifest_id=TEXT(stored=True), party=TEXT(stored=True),
                     content=TEXT(stored=True))
@@ -107,13 +105,21 @@ def main():
     bm = args['BM']
     fr = args['FR']
     input_args = args['input_args']
-
+    language = args['language']
     word = input_args
-    dic, d, di = index()
 
     if file:
         print("Using file " + file)
         FILE_PATH = "pri_project_data/"+file
+
+    if language is not None and language == "pt" and not file:
+        FILE_PATH = "pri_project_data/pt_docs_clean.csv"
+    elif language is not None and language == "en" and not file:
+        FILE_PATH = "pri_project_data/en_docs_clean.csv"
+    else:
+        print("Language must be 'en' or 'pt'")
+        return
+    dic, d, di = index(FILE_PATH)
 
     if tf:
         manifests_keywords(word, dic, d, di, scoring.TF_IDF)

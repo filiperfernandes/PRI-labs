@@ -274,6 +274,13 @@ def main():
         print("Using file " + file)
         FILE_PATH = "pri_project_data/"+file
 
+    if language is not None and language == "pt" and not file:
+        FILE_PATH = "pri_project_data/pt_docs_clean.csv"
+    elif language is not None and language == "en" and not file:
+        FILE_PATH = "pri_project_data/en_docs_clean.csv"
+    else:
+        print("Language must be 'en' or 'pt'")
+
     if globally:
         get_most_named_entity_globally(language)
     elif party:
