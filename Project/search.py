@@ -21,7 +21,7 @@ def get_parser():
                         action="store_true")
     parser.add_argument('-b', '--BM', help="""BM-25F""",
                         action="store_true")
-    parser.add_argument('-f', '--FR', help="""Frequency""",
+    parser.add_argument('-fr', '--FR', help="""Frequency""",
                         action="store_true")
     return parser
 
