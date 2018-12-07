@@ -12,7 +12,7 @@ FILE_PATH = "pri_project_data/en_docs_clean.csv"
 
 
 def get_parser():
-    parser = argparse.ArgumentParser(description="""PRI statistical analysis tool""")
+    parser = argparse.ArgumentParser(description="""PRI search tool""")
     parser.add_argument('-f', '--file', dest='file', help="""receive file from stdin [default: no]""",
                         action="store")
     parser.add_argument('-l', '--language', dest='language', help="""Specify language 'en' or 'pt'""",
@@ -23,6 +23,9 @@ def get_parser():
                         action="store_true")
     parser.add_argument('-fr', '--FR', help="""Frequency""",
                         action="store_true")
+    parser.add_argument('-i', '--input', dest='input_args', help="""Words to search separated by commas 
+    (word1,word2,word3)""",
+                        action="store", required=True)
     return parser
 
 
@@ -103,8 +106,9 @@ def main():
     tf = args['TF']
     bm = args['BM']
     fr = args['FR']
+    input_args = args['input_args']
 
-    word = sys.argv[1]
+    word = input_args
     dic, d, di = index()
 
     if file:

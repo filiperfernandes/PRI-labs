@@ -9,9 +9,6 @@ from sklearn.svm import LinearSVC
 
 import argparse
 
-FILE_PATH = "pri_project_data/en_docs_clean.csv"
-
-
 def get_parser():
 
     parser = argparse.ArgumentParser(description="""PRI statistical analysis tool""")
@@ -44,12 +41,15 @@ def main():
     if file:
         print("Using file " + file)
         FILE_PATH = "pri_project_data/"+file
+    else:
+        FILE_PATH = "pri_project_data/en_docs_clean.csv"
 
     df = pd.read_csv(FILE_PATH)
     y = df.party
     X = df.text
-    if size:
-        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=size)
+
+    if size is not None:
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=float(size))
     else:
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.5)
     vectorizer = TfidfVectorizer(use_idf=False)
