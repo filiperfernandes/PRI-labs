@@ -19,7 +19,6 @@ doc_dict = {}
 party_dict = {}
 
 
-
 def get_parser():
     parser = argparse.ArgumentParser(description="""PRI statistical analysis tool""")
     parser.add_argument('-f', '--file', dest='file', help="""receive file from stdin [default: no]""",
@@ -274,7 +273,8 @@ def main():
     if file:
         print("Using file " + file)
         FILE_PATH = "pri_project_data/"+file
-    elif globally:
+
+    if globally:
         get_most_named_entity_globally(language)
     elif party:
         get_most_named_entity_per_party(language)

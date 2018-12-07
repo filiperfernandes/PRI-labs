@@ -6,8 +6,24 @@ from whoosh import scoring
 import csv
 import sys
 import re
+import argparse
 
 FILE_PATH = "pri_project_data/en_docs_clean.csv"
+
+
+def get_parser():
+    parser = argparse.ArgumentParser(description="""PRI statistical analysis tool""")
+    parser.add_argument('-f', '--file', dest='file', help="""receive file from stdin [default: no]""",
+                        action="store")
+    parser.add_argument('-l', '--language', dest='language', help="""Specify language 'en' or 'pt'""",
+                        action="store")
+    parser.add_argument('-t', '--TF', help="""TF_IDF""",
+                        action="store_true")
+    parser.add_argument('-b', '--BM', help="""BM-25F""",
+                        action="store_true")
+    parser.add_argument('-f', '--FR', help="""Frequency""",
+                        action="store_true")
+    return parser
 
 
 def index():
@@ -36,10 +52,10 @@ def index():
     return dic, d, di
 
 
-def manifests_keywords(word, dic, d, di):
+def manifests_keywords(word, dic, d, di, wheight):
     s_words = word.split(",")
     ix = open_dir("dir")
-    with ix.searcher(weighting=scoring.TF_IDF()) as searcher:
+    with ix.searcher(weighting=wheight) as searcher:
         qu = QueryParser("content", ix.schema, group=OrGroup)
         i = 0
         lis = []
@@ -81,9 +97,28 @@ def manifests_keywords(word, dic, d, di):
 
 
 def main():
+    parser = get_parser()
+    args = vars(parser.parse_args())
+    file = args['file']
+    tf = args['TF']
+    bm = args['BM']
+    fr = args['FR']
+
     word = sys.argv[1]
     dic, d, di = index()
-    manifests_keywords(word, dic, d, di)
+
+    if file:
+        print("Using file " + file)
+        FILE_PATH = "pri_project_data/"+file
+
+    if tf:
+        manifests_keywords(word, dic, d, di, scoring.TF_IDF)
+    elif bm:
+        manifests_keywords(word, dic, d, di, scoring.BM25F)
+    elif fr:
+        manifests_keywords(word, dic, d, di, scoring.Frequency)
+    else:
+        parser.print_help()
 
 
 if __name__ == "__main__":
