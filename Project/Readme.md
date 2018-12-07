@@ -20,8 +20,10 @@
  
  ##### Usage:
  
-  - ````python3 search.py keyword1, keyword2, keyword3, etc.````
- 
+ - To print help
+    - ````python search.py [-h] ````
+ - Global usage
+        - ````python search.py [-h] [-f FILE] [-l LANGUAGE] [-t TF_IDF] [-b BM-25F] [-fr Frequency] -i INPUT_ARGS````
  ---
  
 ### Exercise B
@@ -35,8 +37,11 @@
  
  ##### Usage:
  
-  - ````python3 classification.py````
-  
+  - To print help
+    - ````python3 classification.py -h````
+ - Global usage
+    - ```usage: classification.py [-h] [-f FILE] [-s SIZE] [-K KNeighborsClassifier] [-P Perceptron] [-m MultinomialNB] [-l LinearSVC]```
+
  ---
  
 ### Exercise C
