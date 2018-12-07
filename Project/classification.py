@@ -62,6 +62,8 @@ def main():
         classifier = Perceptron()
     elif multi:
         classifier = MultinomialNB()
+    elif linear:
+        classifier = LinearSVC()
     else:
         print("No classifier specified, using LinearSVC")
         classifier = LinearSVC()
